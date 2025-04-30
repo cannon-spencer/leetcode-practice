@@ -2,7 +2,7 @@ class Solution {
 public:
     // the first approach is O(n) memory and time if we store some extra information like
     // the max height coming from the left and the right at each location ahead of time
-    int trap(vector<int>& height) {
+    /*int trap(vector<int>& height) {
         int n = height.size();
         vector<int> maxLeftArr(n);
         vector<int> maxRightArr(n);
@@ -33,5 +33,36 @@ public:
         }
 
         return totalWater;
+    }*/
+
+    // we can also get a two pointer approach to save on memory used. The trick is 
+    // updating at the left and the right at the same time using the min of the heights
+    // we currently have
+    int trap(vector<int>& height) {
+        int n = height.size();
+        // init maxes to the edges
+        int leftMax = height[0], rightMax = height[n - 1];
+
+        // excluding edges because they cant hold water anyways
+        int leftPtr = 0, rightPtr = n - 1;
+
+        int ans = 0;
+
+        while(leftPtr < rightPtr){
+            
+            // increment lower max val
+            if(leftMax < rightMax){
+                leftPtr++;
+                leftMax = std::max(leftMax, height[leftPtr]);
+                ans += leftMax - height[leftPtr];
+            } else {
+                rightPtr--;
+                rightMax = std::max(rightMax, height[rightPtr]);
+                ans += rightMax - height[rightPtr];
+            }
+        }
+
+        return ans;
+        
     }
 };
